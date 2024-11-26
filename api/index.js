@@ -4,7 +4,6 @@ const cors = require('cors');
 const { Client } = require('pg');
 
 const app = express();
-const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -33,27 +32,23 @@ app.get('/produtos', async (req, res) => {
   }
 });
 
-
 app.post('/login', async (req, res) => {
-    console.log(req.body);
-    const { username, password } = req.body;
-    try {
-        const result = await client.query(
-            'SELECT * FROM usuarios WHERE usuario = $1 AND senha = $2',
-            [username, password]
-        );
+  const { username, password } = req.body;
+  try {
+    const result = await client.query(
+      'SELECT * FROM usuarios WHERE usuario = $1 AND senha = $2',
+      [username, password]
+    );
 
-        if (result.rows.length > 0) {
-            res.status(200).json({ success: true, message: 'Login bem-sucedido!' });
-        } else {
-            res.status(401).json({ success: false, message: 'Usuário ou senha inválidos' });
-        }
-    } catch (error) {
-        console.error('Erro na consulta ao banco:', error);
-        res.status(500).json({ success: false, message: 'Erro no servidor' });
+    if (result.rows.length > 0) {
+      res.status(200).json({ success: true, message: 'Login bem-sucedido!' });
+    } else {
+      res.status(401).json({ success: false, message: 'Usuário ou senha inválidos' });
     }
+  } catch (error) {
+    console.error('Erro na consulta ao banco:', error);
+    res.status(500).json({ success: false, message: 'Erro no servidor' });
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-});
+module.exports = app; // Exporta o app para funcionar como função serverless
