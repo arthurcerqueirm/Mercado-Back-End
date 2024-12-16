@@ -51,4 +51,4 @@ app.post('/login', async (req, res) => {
   }
 });
 
-module.exports = app; // Exporta o app para funcionar como função serverless
+module.exports = app; 
